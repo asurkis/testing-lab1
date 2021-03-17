@@ -23,14 +23,19 @@ class AlgorithmTest {
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
-    fun testHeightValue(n: Int) {
+    fun testHeightOneValue(n: Int) {
         val btree = BTree()
-        val expectedHeight = floor(log2((n + 1).toDouble())).toInt()
-        if (n >= 9) {
-            println("1!1")
-        }
         repeat(n) { btree.insert(0) }
-        btree.print()
-        Assertions.assertEquals(expectedHeight, btree.height)
+        val expected = floor(log2((n + 1).toDouble())).toInt()
+        Assertions.assertEquals(expected, btree.height)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
+    fun testHeightDifferentValues(n: Int) {
+        val btree = BTree()
+        for (i in 1..n) btree.insert(i)
+        val expected = floor(log2(n.toDouble())).toInt()
+        Assertions.assertTrue(expected <= btree.height && btree.height <= expected + 1)
     }
 }
