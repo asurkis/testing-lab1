@@ -1,4 +1,4 @@
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
@@ -35,12 +35,12 @@ class TrigonometryTest {
         ]
     )
     fun testTg(x: Double, y: Double, epsilon: Double) {
-        assert(abs(tg(x) - y) < epsilon)
+        Assertions.assertTrue(abs(tg(x) - y) < epsilon)
     }
 
     @ParameterizedTest
     @ValueSource(ints = [0, 1, -1])
     fun testTgHalfPi(k: Int) {
-        assert(abs(tg((0.5 + k) * PI)) > 1e9)
+        Assertions.assertTrue(abs(tg((0.5 + k) * PI)) > 1e9)
     }
 }
