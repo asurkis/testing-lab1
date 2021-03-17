@@ -1,23 +1,122 @@
-class Node(
-    var parent: Node? = null,
-    var size: Int = 0,
-    var values: Array<Int> = Array(3) { 0 },
-    var children: Array<Node?> = Array(4) { null }
-) {
-    fun contains(v: Int): Boolean {
-        var i = 0
-        while (i < size && v < values[i]) i += 1
-        if (v == values[i]) return true
-        return children[i]?.contains(v) == true
-    }
-
-    fun insert(value: Int) {
-
-    }
-
-    fun remove(value: Int): Boolean = false
-}
+val NODE_CAPACITY = 3
 
 class BTree {
+    private class Node(
+        var parent: Node? = null,
+        var size: Int = 0,
+        var keys: Array<Int> = Array(NODE_CAPACITY) { 0 },
+        var children: Array<Node?> = Array(NODE_CAPACITY + 1) { null }
+    ) {
+        val isLeaf get() = children.all { it == null }
 
+        fun findGeq(key: Int): Int {
+            var i = 0
+            while (i < size && keys[i] < key) ++i
+            return i
+        }
+
+        fun contains(key: Int): Boolean {
+            val pos = findGeq(key)
+            if (keys[pos] == key) return true
+            return children[pos]?.contains(key) == true
+        }
+
+        fun insert(key: Int): Boolean {
+            if (size == NODE_CAPACITY) return false
+            val pos = findGeq(key)
+            for (i in size++ downTo pos + 1) {
+                keys[i] = keys[i - 1]
+                children[i] = children[i - 1]
+            }
+            keys[pos] = key
+            children[pos] = null
+            return true
+        }
+
+        fun delete(key: Int): Boolean {
+            val pos = findGeq(key)
+            if (pos == size || keys[pos] != key) {
+                return false
+            }
+            for (i in pos until --size) {
+                keys[i] = keys[i + 1]
+                children[i] = children[i + 1]
+            }
+            keys[size] = 0
+            children[size] = null
+            return true
+        }
+
+        fun split() {
+            val left = Node(parent = this, size = size / 2)
+            val right = Node(parent = this, size = (size - 1) / 2)
+
+            left.keys[0] = keys[0]
+            left.children[0] = children[0]
+            left.children[1] = children[1]
+
+            right.keys[0] = keys[2]
+            right.children[0] = children[2]
+            right.children[1] = children[3]
+
+            keys[0] = keys[1]
+            keys[1] = 0
+            keys[2] = 0
+            children[0] = left
+            children[1] = right
+            children[2] = null
+            children[3] = null
+        }
+    }
+
+    private var root = Node()
+    var height = 1
+        private set
+    var size = 0
+        private set
+
+    fun contains(key: Int) = root.contains(key)
+
+    fun insert(key: Int) {
+        var node = root
+        while (!node.isLeaf) {
+            val pos = node.findGeq(key)
+            node = node.children[pos]!!
+        }
+        node.insert(key)
+        if (node.size == NODE_CAPACITY) {
+            split(node)
+        }
+    }
+
+    private fun split(node: Node) {
+        node.split()
+        val parent = node.parent ?: return
+        node.children[0]!!.parent = parent
+        node.children[1]!!.parent = parent
+
+        var pos = 0
+        while (pos < parent.size && parent.children[pos] != node) ++pos
+
+        for (i in parent.size++ downTo pos + 1) {
+            parent.keys[i] = parent.keys[i - 1]
+            parent.children[i] = parent.children[i - 1]
+        }
+
+        parent.children[pos] = node.children[0]
+        parent.children[pos + 1] = node.children[1]
+        parent.keys[pos] = node.keys[0]
+
+        if (parent.size == NODE_CAPACITY) split(parent)
+    }
+
+    private fun merge(node: Node) {
+
+    }
+
+    fun print() = printNode(root, 0)
+
+    private fun printNode(node: Node, indent: Int) {
+
+    }
 }
