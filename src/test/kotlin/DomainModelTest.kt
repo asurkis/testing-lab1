@@ -6,7 +6,7 @@ import kotlin.test.assertNotEquals
 
 class DomainModelTest {
     @ParameterizedTest
-    @ValueSource(booleans = [ false, true ])
+    @ValueSource(booleans = [false, true])
     fun testText(addCornflakes: Boolean) {
         val room = mutableListOf<PhysicalObject>()
         val arthur = HumanFromEarth("Arthur", room)

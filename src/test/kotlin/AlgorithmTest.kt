@@ -38,4 +38,31 @@ class AlgorithmTest {
         val expected = floor(log2(n.toDouble())).toInt()
         Assertions.assertTrue(expected <= btree.height && btree.height <= expected + 1)
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    fun testRemoving(n: Int) {
+        val btree = BTree()
+        for (i in 1..n) btree.insert(i)
+        for (i in 1..n) btree.remove(i)
+        Assertions.assertEquals(0, btree.size)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    fun testRemovingHalf(n: Int) {
+        val btree = BTree()
+        for (i in 1..n) btree.insert(i)
+        for (i in 1..n / 2) btree.remove(i)
+        Assertions.assertEquals((n + 1) / 2, btree.size)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    fun testRemovingSizeCalculations(n: Int) {
+        val btree = BTree()
+        for (i in 1..n) btree.insert(i)
+        for (i in 1..n / 2) btree.remove(i)
+        Assertions.assertEquals(btree.realSize, btree.size)
+    }
 }
