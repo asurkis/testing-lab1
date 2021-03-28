@@ -130,10 +130,9 @@ class BTree {
 
     }
 
-    fun print() = printNode(root, 0)
+    /*fun print() = printNode(root, 0)
 
     private fun printNode(node: Node, indent: Int) {
-//        print(" ".repeat(indent))
         for (i in 0 until node.size) {
             print("${node.keys[i]} ")
         }
@@ -148,5 +147,5 @@ class BTree {
                 println("null")
             }
         }
-    }
+    }*/
 }
