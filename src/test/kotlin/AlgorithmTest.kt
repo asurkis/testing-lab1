@@ -31,16 +31,16 @@ class AlgorithmTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
+    @ValueSource(ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
     fun testHeightDifferentValues(n: Int) {
         val btree = BTree()
         for (i in 1..n) btree.insert(i)
-        val expected = floor(log2(n.toDouble())).toInt()
+        val expected = if (n != 0) floor(log2(n.toDouble())).toInt() else 1
         Assertions.assertTrue(expected <= btree.height && btree.height <= expected + 1)
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    @ValueSource(ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
     fun testRemoving(n: Int) {
         val btree = BTree()
         for (i in 1..n) btree.insert(i)
@@ -49,7 +49,16 @@ class AlgorithmTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    @ValueSource(ints = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
+    fun testRemovingContains(n: Int) {
+        val btree = BTree()
+        for (i in 1..n) btree.insert(i)
+        for (i in 1..n) btree.remove(i)
+        Assertions.assertFalse(btree.contains(n))
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
     fun testRemovingHalf(n: Int) {
         val btree = BTree()
         for (i in 1..n) btree.insert(i)
@@ -58,7 +67,7 @@ class AlgorithmTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [0, 1, 2, 3, 10, 100])
+    @ValueSource(ints = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 31, 32, 33, 63, 64, 65, 100])
     fun testRemovingSizeCalculations(n: Int) {
         val btree = BTree()
         for (i in 1..n) btree.insert(i)

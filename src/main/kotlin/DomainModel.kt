@@ -35,7 +35,9 @@ open class PhysicalContainer(location: Location?) : PhysicalObject(location), Lo
 }
 
 open class Human(val name: String, location: Location?) : PhysicalObject(location) {
+    var lookingAt: PhysicalObject? = null
     open val isAnxious get() = false
+    open val isBlinking get() = true
     val hands = PhysicalContainer(null)
 }
 
@@ -44,6 +46,7 @@ class HumanFromBetelgeuse(name: String, location: Location?) : Human(name, locat
 class HumanFromEarth(name: String, location: Location?) : Human(name, location),
     ObjectFromEarth {
     override val isAnxious get() = location?.all { it == this || it !is ObjectFromEarth } != false
+    override val isBlinking get() = lookingAt is HumanFromBetelgeuse
 }
 
 class DentrassiLingerie(location: Location?) : PhysicalObject(location)

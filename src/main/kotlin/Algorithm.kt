@@ -19,7 +19,7 @@ class BTree {
 
         fun contains(key: Int): Boolean {
             val pos = findGeq(key)
-            if (keys[pos] == key) return true
+            if (pos < size && keys[pos] == key) return true
             return children[pos]?.contains(key) == true
         }
 
